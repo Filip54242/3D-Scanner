@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet"  text="text/css" href="{{url_for('static',filename='css/index.css') }}">
+  <title>Developement Build</title>
+</head>
+  <body>
+    <div class="button_container">
+      <button class="img_button" id="rotate_clockwise">Rotate Clockwise</button>
+      <button class="img_button" id="rgb_image">RGB Image</button>
+      <button class="img_button" id="depth_raw">Depth Raw</button>
+      <button class="img_button" id="depth_colorized">Depth Colorized</button>
+      <button class="img_button" id="rotate_counterclockwise">Rotate CounterClockwise</button>
+    </div>
+ 
+    <div class="image-container">
+        <img id="main_image" src="{{ url_for('image') }}" width="50%"/>
+    </div>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    </body>
+
+
+</html>

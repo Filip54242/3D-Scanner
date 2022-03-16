@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+  <head><title>Developement Build</title>
+    <script src="{{ url_for('static', filename='js/plotly-2.8.3.min.js')}}"></script></head>
+ <body>
+  <div id='chart' class='chart'”></div>
+</body>
+
+
+<script type='text/javascript'>
+  var graphs = {{graphJSON | safe}};
+  Plotly.newPlot('chart',graphs,{});
+</script>
+</html>
