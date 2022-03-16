@@ -1,0 +1,18 @@
+.img_button
+{
+    height: 75px;
+    width: 150px;
+    margin-left: 100px;
+}
+
+.button_container
+{
+    display: flex;
+    justify-content: center;  
+}
+
+.image-container {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+  }
