@@ -44,12 +44,12 @@ def depth_raw():
 
 @app.route('/clockwise')
 def rotate_clockwise():
-    motor.rotate_clockwise(10)
+    motor.rotate(-10)
     return "200"
 
 @app.route('/counterclockwise')
 def rotate_counterclockwise():
-    motor.rotate_counter_clockwise(10)
+    motor.rotate(-10)
     return "200"
 
 @app.route('/image')

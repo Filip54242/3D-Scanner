@@ -1,52 +1,34 @@
-import RPi.GPIO as GPIO
-from time import sleep
+#import RPi.GPIO as GPIO
+import time
+import os
+import serial
+
 
 class MotorController:
     def __init__(self):
-        self.stepper_pins=[23,25,24,8]
-        self.step_sleep=0.002
-        self.step_count=11632
-        self.steps_per_angle=self.step_count/360
-        self.clockwise_rotation=False
-        self.step_sequence=[
-            [GPIO.HIGH, GPIO.LOW, GPIO.HIGH, GPIO.LOW],
-            [GPIO.LOW,GPIO.HIGH,GPIO.HIGH,GPIO.LOW],
-            [GPIO.LOW,GPIO.HIGH,GPIO.LOW,GPIO.HIGH],
-            [GPIO.HIGH,GPIO.LOW,GPIO.LOW,GPIO.HIGH]]
-        self.step_sequence_reset=len(self.step_sequence)
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.stepper_pins,GPIO.OUT)
+        self.connection = None
+        self.serials_to_try = range(50)
+        self.try_to_connect()
 
-    def __del__(self):
-        self.clear()
+    def try_to_connect(self):
+        for serial_try in self.serials_to_try:
+            if os.path.exists(f'/dev/ttyACM{serial_try}') == True:
+                conn = serial.Serial(f'/dev/ttyACM{serial_try}', 115200)
+                if conn is not None:
+                    self.connection = conn
+                    print(f"Connected to : /dev/ttyACM{serial_try}")
+                    time.sleep(1)
+                    return
 
-    def clear(self):
-        #GPIO.output( self.stepper_pins, GPIO.LOW )
-        GPIO.cleanup()
-    
-    def handle_sequence(self,steps,sequence):
-        for step in range(0,steps):
-            GPIO.output(self.stepper_pins,sequence[step%self.step_sequence_reset])
-            sleep(self.step_sleep)
-    
-    def rotate_clockwise(self,angle):
-        if angle>0:
-            steps=int(self.steps_per_angle*angle)
-            self.handle_sequence(steps,self.step_sequence)
+    def rotate(self, degrees):
 
-    def rotate_counter_clockwise(self,angle):
-        if angle>0:
-            steps=int(self.steps_per_angle*angle)
-            self.handle_sequence(steps,self.step_sequence[::-1])
-    
-    def rotate(self,degrees):
-        if degrees>0:
-            self.rotate_clockwise(degrees)
-        else:
-            self.rotate_counter_clockwise(-degrees)
+        if type(degrees) is int and \
+        self.connection is not None:
+            command = f"{str(degrees)}\n"
+            self.connection.write(bytes(command.encode("utf-8")))
+            self.last_operation=time.time()
 
 
+motor_con = MotorController()
+motor_con.rotate(10)
 
-if __name__=='__main__':
-    motor=MotorController()
-    motor.rotate(-50)
